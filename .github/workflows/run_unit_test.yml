@@ -37,10 +37,10 @@ jobs:
       with:
         channel: 'stable' # or: 'dev' or 'beta'
       
-    - run: flutter pub get src/plantwatering
+    - run: flutter pub get
       working-directory: ${{env.workDir}}
       
-    - run: flutter test src/plantwatering
+    - run: flutter test 
       working-directory: ${{env.workDir}}
       
    # - run: flutter build apk
