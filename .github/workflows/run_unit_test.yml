@@ -22,10 +22,12 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: macos-latest
+    env:
+      workDir: ./src/plantwatering/
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - working-directory: ./src/plantwatering/
+
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     - uses: actions/setup-java@v1
@@ -34,8 +36,13 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
         channel: 'stable' # or: 'dev' or 'beta'
+      
     - run: flutter pub get src/plantwatering
+      working-directory: ${{env.workDir}}
+      
     - run: flutter test src/plantwatering
+      working-directory: ${{env.workDir}}
+      
    # - run: flutter build apk
 
 
