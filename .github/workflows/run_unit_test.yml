@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Run Unit tests
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -33,8 +33,8 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
         channel: 'stable' # or: 'dev' or 'beta'
-    - run: flutter pub get
-    - run: flutter test
+    - run: flutter pub get src/plantwatering
+    - run: flutter test src/plantwatering
    # - run: flutter build apk
 
 
