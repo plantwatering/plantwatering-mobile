@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plantwatering/features/devices/DevicesScreen.dart';
+import 'package:plantwatering/features/devices/devices_screen.dart';
 
 void main() => runApp(MyApp());
 
