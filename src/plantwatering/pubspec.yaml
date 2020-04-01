@@ -29,7 +29,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  mockito : 
   build_runner:
   mobx_codegen: 1.0.3
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plantwatering/core/ble/bluetooth_service.dart';
 import 'package:plantwatering/features/devices/stores/devices_store.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +11,7 @@ class DevicesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      create: (_) => DevicesStore(),
+      create: (_) => DevicesStore(Provider.of<BluetoothService>(context)),
       child: Builder(
           builder: (context) =>
               DevicesScreenContent(Provider.of<DevicesStore>(context))),

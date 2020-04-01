@@ -1,11 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plantwatering/features/devices/stores/devices_store.dart';
 
+import '../../../mocks/mocks.dart';
+
+
 void main() {
   group('Devices Store', () {
     test("should instanciate", () {
-      expect(DevicesStore(), isNotNull);
+      var bluetooth = BluetoothServiceMock();
+      expect(DevicesStore(bluetooth), isNotNull);
     });
-    
   });
 }
