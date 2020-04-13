@@ -9,21 +9,51 @@ part of 'devices_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$DevicesStore on _DevicesStoreBase, Store {
-  final _$devicesAtom = Atom(name: '_DevicesStoreBase.devices');
+  Computed<List<Device>> _$_scannedDevicesComputed;
 
   @override
-  ObservableMap<String, ScanResult> get devices {
-    _$devicesAtom.context.enforceReadPolicy(_$devicesAtom);
-    _$devicesAtom.reportObserved();
-    return super.devices;
+  List<Device> get _scannedDevices => (_$_scannedDevicesComputed ??=
+          Computed<List<Device>>(() => super._scannedDevices))
+      .value;
+  Computed<List<Device>> _$devicesComputed;
+
+  @override
+  List<Device> get devices =>
+      (_$devicesComputed ??= Computed<List<Device>>(() => super.devices)).value;
+
+  final _$_scansAtom = Atom(name: '_DevicesStoreBase._scans');
+
+  @override
+  ObservableMap<String, ScanResult> get _scans {
+    _$_scansAtom.context.enforceReadPolicy(_$_scansAtom);
+    _$_scansAtom.reportObserved();
+    return super._scans;
   }
 
   @override
-  set devices(ObservableMap<String, ScanResult> value) {
-    _$devicesAtom.context.conditionallyRunInAction(() {
-      super.devices = value;
-      _$devicesAtom.reportChanged();
-    }, _$devicesAtom, name: '${_$devicesAtom.name}_set');
+  set _scans(ObservableMap<String, ScanResult> value) {
+    _$_scansAtom.context.conditionallyRunInAction(() {
+      super._scans = value;
+      _$_scansAtom.reportChanged();
+    }, _$_scansAtom, name: '${_$_scansAtom.name}_set');
+  }
+
+  final _$connectedDevicesAtom =
+      Atom(name: '_DevicesStoreBase.connectedDevices');
+
+  @override
+  ObservableList<Device> get connectedDevices {
+    _$connectedDevicesAtom.context.enforceReadPolicy(_$connectedDevicesAtom);
+    _$connectedDevicesAtom.reportObserved();
+    return super.connectedDevices;
+  }
+
+  @override
+  set connectedDevices(ObservableList<Device> value) {
+    _$connectedDevicesAtom.context.conditionallyRunInAction(() {
+      super.connectedDevices = value;
+      _$connectedDevicesAtom.reportChanged();
+    }, _$connectedDevicesAtom, name: '${_$connectedDevicesAtom.name}_set');
   }
 
   final _$discoverDevicesAsyncAction = AsyncAction('discoverDevices');
@@ -36,13 +66,14 @@ mixin _$DevicesStore on _DevicesStoreBase, Store {
   final _$connectAsyncAction = AsyncAction('connect');
 
   @override
-  Future<dynamic> connect(ScanResult scan) {
-    return _$connectAsyncAction.run(() => super.connect(scan));
+  Future<dynamic> connect(Device device) {
+    return _$connectAsyncAction.run(() => super.connect(device));
   }
 
   @override
   String toString() {
-    final string = 'devices: ${devices.toString()}';
+    final string =
+        'connectedDevices: ${connectedDevices.toString()},devices: ${devices.toString()}';
     return '{$string}';
   }
 }

@@ -22,12 +22,12 @@ class BluetoothService {
 
   Stream<ScanResult> scanForDevicesWithServiceAutomation() async* {
     if (await _bluetooth.isScanning.first) {
-      yield* Stream.empty();
       return;
     }
     yield* _bluetooth.scan(
         scanMode: ScanMode.lowLatency,
-        timeout: Duration(seconds: 10),
-        withServices: [serviceAutomationIo]);
+        timeout: Duration(seconds: 30),
+        withServices: [serviceAutomationIo]
+        );
   }
 }

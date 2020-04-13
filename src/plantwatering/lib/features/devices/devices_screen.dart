@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:plantwatering/core/ble/bluetooth_service.dart';
+import 'package:plantwatering/features/devices/models/devices.dart';
 import 'package:plantwatering/features/devices/stores/devices_store.dart';
+import 'package:plantwatering/features/devices/widgets/devices_tile.dart';
 import 'package:provider/provider.dart';
 
 class DevicesScreen extends StatelessWidget {
@@ -41,33 +43,41 @@ class _DevicesScreenContentState extends State<DevicesScreenContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text("Devices"),
+        ),
         body: SafeArea(
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: Observer(builder: (_) {
-              return RefreshIndicator(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                  child: RefreshIndicator(
                 onRefresh: () => widget.store.discoverDevices(),
-                child: ListView.builder(
-                  itemCount: widget.store.devices.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                        onTap: () => widget.store.connect(
-                            widget.store.devices.values.elementAt(index)),
-                        title: Text(getDeviceNameOrUnknown(index)));
-                  },
-                ),
-              );
-            }),
+                child: Observer(builder: (_) {
+                  return ListView.builder(
+                    itemCount: _devices().length,
+                    itemBuilder: (context, index) {
+                      return DeviceTile(
+                        onTap: () => {widget.store.connect(_deviceAt(index))},
+                        device: _deviceAt(index),
+                      );
+                    },
+                  );
+                }),
+              )),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 
-  String getDeviceNameOrUnknown(int index) {
-    var scan = widget.store.devices.values.elementAt(index);
-    return scan.toString();
-    // return "${scan.advertisementData.localName} [${scan.device.id.id}]";
+  List<Device> _devices() {
+    return widget.store.devices;
+  }
+
+  Device _deviceAt(int index) {
+    return _devices().elementAt(index);
+  }
+
+  String getDeviceNameOrUnknown(Device device) {
+    return "${device.name} ${device.isConnected ? "(Connected)" : ""}";
   }
 }
