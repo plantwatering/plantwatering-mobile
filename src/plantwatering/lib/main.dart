@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plantwatering/core/ble/bluetooth_service.dart';
-import 'package:plantwatering/features/devices/devices_screen.dart';
+import 'package:plantwatering/features/devices/list/devices_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());

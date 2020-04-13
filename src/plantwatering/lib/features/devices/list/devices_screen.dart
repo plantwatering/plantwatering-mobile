@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:plantwatering/core/ble/bluetooth_service.dart';
+import 'package:plantwatering/features/devices/list/stores/devices_store.dart';
+import 'package:plantwatering/features/devices/list/widgets/devices_tile.dart';
 import 'package:plantwatering/features/devices/models/devices.dart';
-import 'package:plantwatering/features/devices/stores/devices_store.dart';
-import 'package:plantwatering/features/devices/widgets/devices_tile.dart';
 import 'package:provider/provider.dart';
 
 class DevicesScreen extends StatelessWidget {

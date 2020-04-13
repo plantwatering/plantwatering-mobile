@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:plantwatering/features/devices/devices_screen.dart';
+import 'package:plantwatering/features/devices/list/devices_screen.dart';
 
 void main() {
   testWidgets('Device Screen shows a label', (WidgetTester tester) async {
