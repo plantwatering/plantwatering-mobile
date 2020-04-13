@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:plantwatering/core/ble/bluetooth_service.dart';
+import 'package:plantwatering/features/devices/details/device_details_screen.dart';
 import 'package:plantwatering/features/devices/list/stores/devices_store.dart';
 import 'package:plantwatering/features/devices/list/widgets/devices_tile.dart';
 import 'package:plantwatering/features/devices/models/devices.dart';
@@ -57,7 +58,10 @@ class _DevicesScreenContentState extends State<DevicesScreenContent> {
                     itemCount: _devices().length,
                     itemBuilder: (context, index) {
                       return DeviceTile(
-                        onTap: () => {widget.store.connect(_deviceAt(index))},
+                        onTap: () => {
+                          Navigator.of(context)
+                              .push(DeviceDetailScreen.route(_deviceAt(index)))
+                        },
                         device: _deviceAt(index),
                       );
                     },
