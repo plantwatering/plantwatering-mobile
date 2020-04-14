@@ -5,6 +5,7 @@ import 'package:plantwatering/features/devices/details/device_details_screen.dar
 import 'package:plantwatering/features/devices/list/stores/devices_store.dart';
 import 'package:plantwatering/features/devices/list/widgets/devices_tile.dart';
 import 'package:plantwatering/features/devices/models/devices.dart';
+import 'package:plantwatering/features/devices/stores/device_store.dart';
 import 'package:provider/provider.dart';
 
 class DevicesScreen extends StatelessWidget {
@@ -73,11 +74,11 @@ class _DevicesScreenContentState extends State<DevicesScreenContent> {
         ));
   }
 
-  List<Device> _devices() {
+  List<DeviceStore> _devices() {
     return widget.store.devices;
   }
 
-  Device _deviceAt(int index) {
+  DeviceStore _deviceAt(int index) {
     return _devices().elementAt(index);
   }
 
