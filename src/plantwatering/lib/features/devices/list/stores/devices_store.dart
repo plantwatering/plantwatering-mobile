@@ -1,6 +1,6 @@
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobx/mobx.dart';
-import 'package:plantwatering/core/ble/bluetooth_service.dart' as _;
+import 'package:plantwatering/core/ble/plant_ble_service.dart';
 import 'package:plantwatering/features/devices/stores/device_store.dart';
 part 'devices_store.g.dart';
 
@@ -9,7 +9,7 @@ class DevicesStore = _DevicesStoreBase with _$DevicesStore;
 abstract class _DevicesStoreBase with Store {
   _DevicesStoreBase(this._bluetoothService);
 
-  final _.BluetoothService _bluetoothService;
+  final PlantBleService _bluetoothService;
 
   @observable
   var _scans = ObservableSet<ScanResult>();

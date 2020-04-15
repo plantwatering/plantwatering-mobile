@@ -8,6 +8,9 @@ class DeviceStore = _DeviceStoreBase with _$DeviceStore;
 abstract class _DeviceStoreBase with Store {
   final BluetoothDevice _device;
 
+  final Guid valveCharacteristicGuid =
+      Guid("00002A56-0000-1000-8000-00805F9B34FB");
+
   _DeviceStoreBase(this._device) {
     _device.state.listen((state) {
       _onBluetoothDeviceStateChanged(state);
@@ -21,8 +24,61 @@ abstract class _DeviceStoreBase with Store {
   @observable
   DeviceState state = DeviceState.disconnected;
 
+  @observable
+  ObservableFuture<List<BluetoothService>> services;
+
+  @observable
+  ObservableList<int> valveValues = ObservableList<int>();
+
   @computed
   bool get isConnected => state == DeviceState.connected;
+
+  @computed
+  bool get servicesAvailable => services.status == FutureStatus.fulfilled;
+
+  @observable
+  BluetoothCharacteristic valve;
+
+  @action
+  Future connectOrDisconnect() async {
+    if (state == DeviceState.connected || state == DeviceState.connecting)
+      await _device.disconnect();
+    else
+      await connect();
+  }
+
+  @action
+  Future fetchServices() =>
+      services = ObservableFuture(_device.discoverServices()).then((services) async {
+        var servicesWithValve = services
+            .where((s) => s.characteristics
+                .where((c) => _isValveCharacteristic(c))
+                .isNotEmpty)
+            .toList();
+
+        valve = servicesWithValve.first.characteristics
+            .firstWhere((c) => _isValveCharacteristic(c));
+        
+        await valve.setNotifyValue(true);
+        valve.value.listen((val) {
+          valveValues = ObservableList.of(val);
+        });
+        return servicesWithValve;
+      });
+
+  bool _isValveCharacteristic(dynamic c) {
+    return c.uuid == valveCharacteristicGuid;
+  }
+
+  @action
+  Future writeToValve() async {
+    await valve.write([128]);
+  }
+
+  Future readValve()async {
+    var values =  await valve.read();
+    valveValues = ObservableList.of(values);
+  }
 
   String get stateMessage {
     switch (state) {
@@ -56,14 +112,6 @@ abstract class _DeviceStoreBase with Store {
       default:
         return DeviceState.disconnected;
     }
-  }
-
-  @action
-  Future connectOrDisconnect() async {
-    if (state == DeviceState.connected || state == DeviceState.connecting)
-      await _device.disconnect();
-    else
-      await connect();
   }
 
   Future connect() async {

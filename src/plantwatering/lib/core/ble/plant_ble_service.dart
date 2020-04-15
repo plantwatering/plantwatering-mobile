@@ -1,10 +1,10 @@
 import 'package:flutter_blue/flutter_blue.dart';
 
-class BluetoothService {
+class PlantBleService {
   final Guid serviceAutomationIo = Guid("00001815-0000-1000-8000-00805F9B34FB");
   FlutterBlue _bluetooth;
 
-  BluetoothService() {
+  PlantBleService() {
     _bluetooth = FlutterBlue.instance;
   }
 
@@ -26,7 +26,7 @@ class BluetoothService {
     }
     yield* _bluetooth.scan(
         scanMode: ScanMode.lowLatency,
-        timeout: Duration(seconds: 30),
+        timeout: Duration(seconds: 60),
         withServices: [serviceAutomationIo]
         );
   }

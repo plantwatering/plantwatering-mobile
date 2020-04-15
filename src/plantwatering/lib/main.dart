@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plantwatering/core/ble/bluetooth_service.dart';
+import 'package:plantwatering/core/ble/plant_ble_service.dart';
 import 'package:plantwatering/features/devices/list/devices_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider(
-          create: (_) => BluetoothService(),
+          create: (_) => PlantBleService(),
         )
       ],
       child: Builder(
