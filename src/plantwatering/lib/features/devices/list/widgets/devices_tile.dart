@@ -13,7 +13,7 @@ class DeviceTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: this.onTap,
-      onLongPress: () => device.connectOrDisconnect(),
+      onLongPress: () => device.toggleConnection(),
       title: Observer(builder: (_) {
         return Row(
           children: <Widget>[

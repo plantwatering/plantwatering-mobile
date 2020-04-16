@@ -1,6 +1,8 @@
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobx/mobx.dart';
 import 'package:plantwatering/features/devices/models/device_state.dart';
+import 'package:plantwatering/features/devices/models/valve_command.dart';
+import 'package:plantwatering/features/devices/models/valve_state.dart';
 part 'device_store.g.dart';
 
 class DeviceStore = _DeviceStoreBase with _$DeviceStore;
@@ -28,19 +30,20 @@ abstract class _DeviceStoreBase with Store {
   ObservableFuture<List<BluetoothService>> services;
 
   @observable
-  ObservableList<int> valveValues = ObservableList<int>();
+  ValveState valveState = ValveState.unknown;
 
   @computed
   bool get isConnected => state == DeviceState.connected;
 
   @computed
-  bool get servicesAvailable => services.status == FutureStatus.fulfilled;
+  bool get servicesAvailable =>
+      services != null && services.status == FutureStatus.fulfilled;
 
   @observable
   BluetoothCharacteristic valve;
 
   @action
-  Future connectOrDisconnect() async {
+  Future toggleConnection() async {
     if (state == DeviceState.connected || state == DeviceState.connecting)
       await _device.disconnect();
     else
@@ -48,22 +51,29 @@ abstract class _DeviceStoreBase with Store {
   }
 
   @action
-  Future fetchServices() =>
-      services = ObservableFuture(_device.discoverServices()).then((services) async {
-        var servicesWithValve = services
+  Future initialize() async {
+    _reset();
+    if (state != DeviceState.connected) {
+      await connect();
+    }
+    await fetchServices();
+    await initValve();
+    await readValve();
+  }
+
+  void _reset() {
+    services = null;
+    valveState = ValveState.unknown;
+  }
+
+  @action
+  Future fetchServices() => services =
+          ObservableFuture(_device.discoverServices()).then((services) async {
+        return services
             .where((s) => s.characteristics
                 .where((c) => _isValveCharacteristic(c))
                 .isNotEmpty)
             .toList();
-
-        valve = servicesWithValve.first.characteristics
-            .firstWhere((c) => _isValveCharacteristic(c));
-        
-        await valve.setNotifyValue(true);
-        valve.value.listen((val) {
-          valveValues = ObservableList.of(val);
-        });
-        return servicesWithValve;
       });
 
   bool _isValveCharacteristic(dynamic c) {
@@ -71,13 +81,24 @@ abstract class _DeviceStoreBase with Store {
   }
 
   @action
+  Future initValve() async {
+    var servicesWithValve = services.value;
+    if (servicesWithValve == null) return;
+    valve = servicesWithValve.first.characteristics
+        .firstWhere((c) => _isValveCharacteristic(c));
+    await valve.setNotifyValue(true);
+    valve.value
+        .listen((value) => valveState = ValveCommand.toState(value.first));
+  }
+
+  @action
   Future writeToValve() async {
     await valve.write([128]);
   }
 
-  Future readValve()async {
-    var values =  await valve.read();
-    valveValues = ObservableList.of(values);
+  Future readValve() async {
+    var values = await valve.read();
+    valveState = ValveCommand.toState(values.first);
   }
 
   String get stateMessage {

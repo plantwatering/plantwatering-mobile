@@ -55,21 +55,21 @@ mixin _$DeviceStore on _DeviceStoreBase, Store {
     }, _$servicesAtom, name: '${_$servicesAtom.name}_set');
   }
 
-  final _$valveValuesAtom = Atom(name: '_DeviceStoreBase.valveValues');
+  final _$valveStateAtom = Atom(name: '_DeviceStoreBase.valveState');
 
   @override
-  ObservableList<int> get valveValues {
-    _$valveValuesAtom.context.enforceReadPolicy(_$valveValuesAtom);
-    _$valveValuesAtom.reportObserved();
-    return super.valveValues;
+  ValveState get valveState {
+    _$valveStateAtom.context.enforceReadPolicy(_$valveStateAtom);
+    _$valveStateAtom.reportObserved();
+    return super.valveState;
   }
 
   @override
-  set valveValues(ObservableList<int> value) {
-    _$valveValuesAtom.context.conditionallyRunInAction(() {
-      super.valveValues = value;
-      _$valveValuesAtom.reportChanged();
-    }, _$valveValuesAtom, name: '${_$valveValuesAtom.name}_set');
+  set valveState(ValveState value) {
+    _$valveStateAtom.context.conditionallyRunInAction(() {
+      super.valveState = value;
+      _$valveStateAtom.reportChanged();
+    }, _$valveStateAtom, name: '${_$valveStateAtom.name}_set');
   }
 
   final _$valveAtom = Atom(name: '_DeviceStoreBase.valve');
@@ -89,12 +89,25 @@ mixin _$DeviceStore on _DeviceStoreBase, Store {
     }, _$valveAtom, name: '${_$valveAtom.name}_set');
   }
 
-  final _$connectOrDisconnectAsyncAction = AsyncAction('connectOrDisconnect');
+  final _$toggleConnectionAsyncAction = AsyncAction('toggleConnection');
 
   @override
-  Future<dynamic> connectOrDisconnect() {
-    return _$connectOrDisconnectAsyncAction
-        .run(() => super.connectOrDisconnect());
+  Future<dynamic> toggleConnection() {
+    return _$toggleConnectionAsyncAction.run(() => super.toggleConnection());
+  }
+
+  final _$initializeAsyncAction = AsyncAction('initialize');
+
+  @override
+  Future<dynamic> initialize() {
+    return _$initializeAsyncAction.run(() => super.initialize());
+  }
+
+  final _$initValveAsyncAction = AsyncAction('initValve');
+
+  @override
+  Future<dynamic> initValve() {
+    return _$initValveAsyncAction.run(() => super.initValve());
   }
 
   final _$writeToValveAsyncAction = AsyncAction('writeToValve');
@@ -120,7 +133,7 @@ mixin _$DeviceStore on _DeviceStoreBase, Store {
   @override
   String toString() {
     final string =
-        'state: ${state.toString()},services: ${services.toString()},valveValues: ${valveValues.toString()},valve: ${valve.toString()},isConnected: ${isConnected.toString()},servicesAvailable: ${servicesAvailable.toString()}';
+        'state: ${state.toString()},services: ${services.toString()},valveState: ${valveState.toString()},valve: ${valve.toString()},isConnected: ${isConnected.toString()},servicesAvailable: ${servicesAvailable.toString()}';
     return '{$string}';
   }
 }
