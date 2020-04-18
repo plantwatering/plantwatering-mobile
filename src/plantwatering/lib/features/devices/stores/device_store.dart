@@ -1,7 +1,6 @@
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobx/mobx.dart';
 import 'package:plantwatering/features/devices/models/device_state.dart';
-import 'package:plantwatering/features/devices/models/valve_command.dart';
 import 'package:plantwatering/features/devices/models/valve_state.dart';
 part 'device_store.g.dart';
 
@@ -88,7 +87,7 @@ abstract class _DeviceStoreBase with Store {
         .firstWhere((c) => _isValveCharacteristic(c));
     await valve.setNotifyValue(true);
     valve.value
-        .listen((value) => valveState = ValveCommand.toState(value.first));
+        .listen((values) => valveState = ValveStateExtension.of(values.first));
   }
 
   @action
@@ -98,7 +97,7 @@ abstract class _DeviceStoreBase with Store {
 
   Future readValve() async {
     var values = await valve.read();
-    valveState = ValveCommand.toState(values.first);
+    valveState = ValveStateExtension.of(values.first);
   }
 
   String get stateMessage {
