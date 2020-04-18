@@ -46,7 +46,10 @@ class _DevicesScreenContentState extends State<DevicesScreenContent> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Devices"),
+          title: Text(
+            "Devices",
+            key: Key("title"),
+          ),
         ),
         body: SafeArea(
           child: Column(
