@@ -6,10 +6,10 @@ import 'package:plantwatering/features/devices/list/devices_screen.dart';
 import 'mocks/mocks.dart';
 
 void main() {
-  DevicesStoreMock devicesStoreMock;
+  DeviceListStoreMock devicesStoreMock;
 
   setUp(() {
-    devicesStoreMock = DevicesStoreMock();
+    devicesStoreMock = DeviceListStoreMock();
   });
 
   testWidgets('Device Screen shows a title', (WidgetTester tester) async {

@@ -16,10 +16,10 @@ class DevicesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      create: (_) => DevicesStore(Provider.of<PlantBleService>(context)),
+      create: (_) => DeviceListStore(Provider.of<PlantBleService>(context)),
       child: Builder(
           builder: (context) =>
-              DevicesScreenContent(Provider.of<DevicesStore>(context))),
+              DevicesScreenContent(Provider.of<DeviceListStore>(context))),
     );
   }
 }
@@ -29,7 +29,7 @@ class DevicesScreenContent extends StatefulWidget {
     this.store, {
     Key key,
   }) : super(key: key);
-  final DevicesStore store;
+  final DeviceListStore store;
 
   @override
   _DevicesScreenContentState createState() => _DevicesScreenContentState();

@@ -8,7 +8,7 @@ void main() {
   group('Devices Store', () {
     test("should instanciate", () {
       var bluetooth = BluetoothServiceMock();
-      expect(DevicesStore(bluetooth), isNotNull);
+      expect(DeviceListStore(bluetooth), isNotNull);
     });
   });
 }

@@ -4,7 +4,7 @@ import 'package:plantwatering/core/ble/plant_ble_service.dart';
 import 'package:plantwatering/features/devices/stores/device_store.dart';
 part 'devices_store.g.dart';
 
-class DevicesStore = _DevicesStoreBase with _$DevicesStore;
+class DeviceListStore = _DevicesStoreBase with _$DevicesStore;
 
 abstract class _DevicesStoreBase with Store {
   _DevicesStoreBase(this._bluetoothService);
