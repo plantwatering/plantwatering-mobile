@@ -1,4 +1,4 @@
-import 'package:plantwatering/features/devices/models/valve_command.dart';
+import 'package:plantwatering/core/ble/commands/valve_command.dart';
 
 enum ValveState { open, closed, unknown }
 
