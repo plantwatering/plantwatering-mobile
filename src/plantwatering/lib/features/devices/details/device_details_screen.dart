@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:plantwatering/core/ble/models/valve_state.dart';
 import 'package:plantwatering/core/ble/plant_ble_service.dart';
 import 'package:plantwatering/features/devices/details/stores/device_detail_store.dart';
-import 'package:plantwatering/features/devices/models/valve_state.dart';
 import 'package:plantwatering/features/devices/stores/device_store.dart';
 import 'package:provider/provider.dart';
 

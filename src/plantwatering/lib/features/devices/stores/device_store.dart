@@ -1,7 +1,7 @@
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobx/mobx.dart';
+import 'package:plantwatering/core/ble/models/valve_state.dart';
 import 'package:plantwatering/features/devices/models/device_state.dart';
-import 'package:plantwatering/features/devices/models/valve_state.dart';
 part 'device_store.g.dart';
 
 class DeviceStore = _DeviceStoreBase with _$DeviceStore;
