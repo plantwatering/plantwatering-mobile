@@ -1,7 +1,8 @@
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:plantwatering/core/ble/plantwatering_services.dart';
 
 class PlantBleService {
-  final Guid serviceAutomationIo = Guid("00001815-0000-1000-8000-00805F9B34FB");
+  final Guid serviceAutomationIo = Guid(PlantWateringServices.automationIo);
   FlutterBlue _bluetooth;
 
   PlantBleService() {
@@ -27,7 +28,7 @@ class PlantBleService {
     yield* _bluetooth.scan(
         scanMode: ScanMode.lowLatency,
         timeout: Duration(seconds: 60),
-        withServices: [serviceAutomationIo]
+        withServices: [serviceAutomationIo],
         );
   }
 }
