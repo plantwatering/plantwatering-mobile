@@ -13,7 +13,7 @@ class PlantBleService {
     return await _bluetooth.isAvailable;
   }
 
-  Future<bool> isBluettothEnabled() async {
+  Future<bool> isBluetoothEnabled() async {
     return await _bluetooth.isOn;
   }
 
@@ -26,9 +26,9 @@ class PlantBleService {
       return;
     }
     yield* _bluetooth.scan(
-        scanMode: ScanMode.lowLatency,
-        timeout: Duration(seconds: 60),
-        withServices: [serviceAutomationIo],
-        );
+      scanMode: ScanMode.lowLatency,
+      timeout: Duration(seconds: 60),
+      withServices: [serviceAutomationIo],
+    );
   }
 }
