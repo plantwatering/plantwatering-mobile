@@ -1,4 +1,5 @@
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:plantwatering/core/ble/ble_sprinkler.dart';
 import 'package:plantwatering/core/ble/plantwatering_services.dart';
 
 class PlantBleService {
@@ -17,8 +18,9 @@ class PlantBleService {
     return await _bluetooth.isOn;
   }
 
-  Future<List<BluetoothDevice>> connectedDevices() async {
-    return await _bluetooth.connectedDevices;
+  Future<List<BleSprinkler>> connectedDevices() async {
+    var connected = await _bluetooth.connectedDevices;
+    return connected.map((c)=>BleSprinkler(c));
   }
 
   Stream<ScanResult> scanForDevicesWithServiceAutomation() async* {

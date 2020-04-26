@@ -6,7 +6,9 @@ import 'package:plantwatering/core/ble/plantwatering_characteristics.dart';
 class BleValve {
   final BluetoothCharacteristic _characteristic;
 
-  BleValve(this._characteristic) : assert(_characteristic.uuid == Guid(PlantWateringCharacteristics.valve));
+  BleValve(this._characteristic) : assert(_characteristic.uuid == Guid(PlantWateringCharacteristics.valve)){
+    _characteristic.setNotifyValue(true);
+  }
 
   Stream<ValveState> get state => _characteristic.value.map((values) => _toState(values));
 

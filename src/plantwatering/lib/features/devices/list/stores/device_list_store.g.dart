@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'devices_store.dart';
+part of 'device_list_store.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,7 +8,7 @@ part of 'devices_store.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
-mixin _$DevicesStore on _DevicesStoreBase, Store {
+mixin _$DeviceListStore on _DevicesStoreBase, Store {
   Computed<ObservableList<DeviceStore>> _$_scannedDevicesComputed;
 
   @override

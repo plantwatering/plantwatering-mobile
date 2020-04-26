@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:plantwatering/features/devices/list/stores/devices_store.dart';
+import 'package:plantwatering/features/devices/list/stores/device_list_store.dart';
 
 import '../../../mocks/mocks.dart';
 

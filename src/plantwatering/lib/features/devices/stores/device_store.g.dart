@@ -24,14 +24,14 @@ mixin _$DeviceStore on _DeviceStoreBase, Store {
   final _$stateAtom = Atom(name: '_DeviceStoreBase.state');
 
   @override
-  DeviceState get state {
+  SprinklerState get state {
     _$stateAtom.context.enforceReadPolicy(_$stateAtom);
     _$stateAtom.reportObserved();
     return super.state;
   }
 
   @override
-  set state(DeviceState value) {
+  set state(SprinklerState value) {
     _$stateAtom.context.conditionallyRunInAction(() {
       super.state = value;
       _$stateAtom.reportChanged();
@@ -72,23 +72,6 @@ mixin _$DeviceStore on _DeviceStoreBase, Store {
     }, _$valveStateAtom, name: '${_$valveStateAtom.name}_set');
   }
 
-  final _$valveAtom = Atom(name: '_DeviceStoreBase.valve');
-
-  @override
-  BluetoothCharacteristic get valve {
-    _$valveAtom.context.enforceReadPolicy(_$valveAtom);
-    _$valveAtom.reportObserved();
-    return super.valve;
-  }
-
-  @override
-  set valve(BluetoothCharacteristic value) {
-    _$valveAtom.context.conditionallyRunInAction(() {
-      super.valve = value;
-      _$valveAtom.reportChanged();
-    }, _$valveAtom, name: '${_$valveAtom.name}_set');
-  }
-
   final _$toggleConnectionAsyncAction = AsyncAction('toggleConnection');
 
   @override
@@ -101,6 +84,13 @@ mixin _$DeviceStore on _DeviceStoreBase, Store {
   @override
   Future<dynamic> initialize() {
     return _$initializeAsyncAction.run(() => super.initialize());
+  }
+
+  final _$fetchServicesAsyncAction = AsyncAction('fetchServices');
+
+  @override
+  Future<dynamic> fetchServices() {
+    return _$fetchServicesAsyncAction.run(() => super.fetchServices());
   }
 
   final _$initValveAsyncAction = AsyncAction('initValve');
@@ -117,23 +107,10 @@ mixin _$DeviceStore on _DeviceStoreBase, Store {
     return _$writeToValveAsyncAction.run(() => super.writeToValve());
   }
 
-  final _$_DeviceStoreBaseActionController =
-      ActionController(name: '_DeviceStoreBase');
-
-  @override
-  Future<dynamic> fetchServices() {
-    final _$actionInfo = _$_DeviceStoreBaseActionController.startAction();
-    try {
-      return super.fetchServices();
-    } finally {
-      _$_DeviceStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
   @override
   String toString() {
     final string =
-        'state: ${state.toString()},services: ${services.toString()},valveState: ${valveState.toString()},valve: ${valve.toString()},isConnected: ${isConnected.toString()},servicesAvailable: ${servicesAvailable.toString()}';
+        'state: ${state.toString()},services: ${services.toString()},valveState: ${valveState.toString()},isConnected: ${isConnected.toString()},servicesAvailable: ${servicesAvailable.toString()}';
     return '{$string}';
   }
 }

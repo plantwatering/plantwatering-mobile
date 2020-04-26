@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:plantwatering/core/ble/plant_ble_service.dart';
 import 'package:plantwatering/features/devices/details/device_details_screen.dart';
-import 'package:plantwatering/features/devices/list/stores/devices_store.dart';
+import 'package:plantwatering/features/devices/list/stores/device_list_store.dart';
 import 'package:plantwatering/features/devices/list/widgets/devices_tile.dart';
 import 'package:plantwatering/features/devices/models/devices.dart';
 import 'package:plantwatering/features/devices/stores/device_store.dart';
@@ -56,7 +56,7 @@ class _DevicesScreenContentState extends State<DevicesScreenContent> {
             children: <Widget>[
               Expanded(
                   child: RefreshIndicator(
-                onRefresh: () => widget.store.discoverDevices(),
+                onRefresh: ()  =>  widget.store.discoverDevices(),
                 child: Observer(builder: (_) {
                   return ListView.builder(
                     itemCount: _devices().length,

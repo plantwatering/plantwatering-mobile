@@ -11,8 +11,11 @@ class BleSprinkler {
   List<BluetoothService> _bleServices = List();
 
   Stream<SprinklerState> get state => _device.state.map((st) => _fromState(st));
-  
+
   Future<BleValve> get valve async => _valve ?? await _tryFindValve();
+
+  String get name => _device.name;
+  String get id => _device.id.id;
 
   Future connect() async {
     await _device.connect(timeout: Duration(seconds: 10));
@@ -22,12 +25,12 @@ class BleSprinkler {
     await _device.disconnect();
   }
 
-  Future _discoverServices() async {
+  Future discoverServices() async {
     _bleServices = await _device.discoverServices();
   }
 
   Future<BleValve> _tryFindValve() async {
-    if (_bleServices == null) await _discoverServices();
+    if (_bleServices == null) await discoverServices();
     var valveCharacteristic = _findValveCharacteristic(_findServiceWithValve(_bleServices));
     return BleValve(valveCharacteristic);
   }

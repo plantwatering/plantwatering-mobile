@@ -1,5 +1,8 @@
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobx/mobx.dart';
+import 'package:plantwatering/core/ble/ble_sprinkler.dart';
+import 'package:plantwatering/core/ble/ble_valve.dart';
+import 'package:plantwatering/core/ble/models/sprinkler_state.dart';
 import 'package:plantwatering/core/ble/models/valve_state.dart';
 import 'package:plantwatering/features/devices/models/device_state.dart';
 part 'device_store.g.dart';
@@ -7,23 +10,23 @@ part 'device_store.g.dart';
 class DeviceStore = _DeviceStoreBase with _$DeviceStore;
 
 abstract class _DeviceStoreBase with Store {
-  final BluetoothDevice _device;
+  final BleSprinkler _device;
+  BleValve valve;
 
-  final Guid valveCharacteristicGuid =
-      Guid("00002A56-0000-1000-8000-00805F9B34FB");
+  final Guid valveCharacteristicGuid = Guid("00002A56-0000-1000-8000-00805F9B34FB");
 
   _DeviceStoreBase(this._device) {
     _device.state.listen((state) {
-      _onBluetoothDeviceStateChanged(state);
+      this.state = state;
     });
   }
 
-  String get id => _device.id.id;
+  String get id => _device.id;
 
   String get name => _device.name;
 
   @observable
-  DeviceState state = DeviceState.disconnected;
+  SprinklerState state = SprinklerState.disconnected;
 
   @observable
   ObservableFuture<List<BluetoothService>> services;
@@ -32,18 +35,14 @@ abstract class _DeviceStoreBase with Store {
   ValveState valveState = ValveState.unknown;
 
   @computed
-  bool get isConnected => state == DeviceState.connected;
+  bool get isConnected => state == SprinklerState.connected;
 
   @computed
-  bool get servicesAvailable =>
-      services != null && services.status == FutureStatus.fulfilled;
-
-  @observable
-  BluetoothCharacteristic valve;
+  bool get servicesAvailable => services != null && services.status == FutureStatus.fulfilled;
 
   @action
   Future toggleConnection() async {
-    if (state == DeviceState.connected || state == DeviceState.connecting)
+    if (state == SprinklerState.connected || state == SprinklerState.connecting)
       await _device.disconnect();
     else
       await connect();
@@ -52,7 +51,7 @@ abstract class _DeviceStoreBase with Store {
   @action
   Future initialize() async {
     _reset();
-    if (state != DeviceState.connected) {
+    if (state != SprinklerState.connected) {
       await connect();
     }
     await fetchServices();
@@ -66,75 +65,43 @@ abstract class _DeviceStoreBase with Store {
   }
 
   @action
-  Future fetchServices() => services =
-          ObservableFuture(_device.discoverServices()).then((services) async {
-        return services
-            .where((s) => s.characteristics
-                .where((c) => _isValveCharacteristic(c))
-                .isNotEmpty)
-            .toList();
-      });
-
-  bool _isValveCharacteristic(dynamic c) {
-    return c.uuid == valveCharacteristicGuid;
+  Future fetchServices() async {
+    var discoverServiceFuture = _device.discoverServices();
+    services = ObservableFuture(discoverServiceFuture);
+    await discoverServiceFuture;
   }
 
   @action
   Future initValve() async {
-    var servicesWithValve = services.value;
-    if (servicesWithValve == null) return;
-    valve = servicesWithValve.first.characteristics
-        .firstWhere((c) => _isValveCharacteristic(c));
-    await valve.setNotifyValue(true);
-    valve.value
-        .listen((values) => valveState = ValveStateExtension.of(values.first));
+    valve = await _device.valve;
+    valve.state.listen((vState) => valveState = vState);
   }
 
   @action
   Future writeToValve() async {
-    await valve.write([128]);
+    await valve.openValve();
   }
 
   Future readValve() async {
-    var values = await valve.read();
-    valveState = ValveStateExtension.of(values.first);
+    valveState = await valve.read();
   }
 
   String get stateMessage {
     switch (state) {
-      case DeviceState.disconnected:
+      case SprinklerState.disconnected:
         return "Disconnected";
-      case DeviceState.connecting:
+      case SprinklerState.connecting:
         return "Connecting";
-      case DeviceState.connected:
+      case SprinklerState.connected:
         return "Connected";
-      case DeviceState.disconnecting:
+      case SprinklerState.disconnecting:
         return "Disconnecting";
       default:
         return "";
     }
   }
 
-  void _onBluetoothDeviceStateChanged(BluetoothDeviceState bleState) {
-    var newState = _from(bleState);
-    if (newState == state) return;
-    state = newState;
-  }
-
-  DeviceState _from(BluetoothDeviceState bleState) {
-    switch (bleState) {
-      case BluetoothDeviceState.connecting:
-        return DeviceState.connecting;
-      case BluetoothDeviceState.connected:
-        return DeviceState.connected;
-      case BluetoothDeviceState.disconnecting:
-        return DeviceState.disconnecting;
-      default:
-        return DeviceState.disconnected;
-    }
-  }
-
   Future connect() async {
-    await _device.connect(timeout: Duration(seconds: 5));
+    await _device.connect();
   }
 }
