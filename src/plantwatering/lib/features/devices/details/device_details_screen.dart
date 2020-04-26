@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:plantwatering/core/ble/models/valve_state.dart';
-import 'package:plantwatering/core/ble/plant_ble_service.dart';
-import 'package:plantwatering/features/devices/details/stores/device_detail_store.dart';
 import 'package:plantwatering/features/devices/stores/device_store.dart';
-import 'package:provider/provider.dart';
 
 class DeviceDetailScreen extends StatelessWidget {
   static Route<dynamic> route(DeviceStore device) {
@@ -19,30 +16,23 @@ class DeviceDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (_) =>
-          DeviceDetailStore(device, Provider.of<PlantBleService>(context)),
-      child: Builder(
-        builder: (context) => DeviceDetailsScreenContent(
-          device: device,
-        ),
+    return Builder(
+      builder: (context) => DeviceDetailsScreenContent(
+        device: device,
       ),
     );
   }
 }
 
 class DeviceDetailsScreenContent extends StatefulWidget {
-  DeviceDetailsScreenContent({Key key, @required this.device})
-      : super(key: key);
+  DeviceDetailsScreenContent({Key key, @required this.device}) : super(key: key);
 
   final DeviceStore device;
   @override
-  _DeviceDetailsScreenContentState createState() =>
-      _DeviceDetailsScreenContentState();
+  _DeviceDetailsScreenContentState createState() => _DeviceDetailsScreenContentState();
 }
 
-class _DeviceDetailsScreenContentState
-    extends State<DeviceDetailsScreenContent> {
+class _DeviceDetailsScreenContentState extends State<DeviceDetailsScreenContent> {
   @override
   void initState() {
     widget.device.initialize();
@@ -61,8 +51,14 @@ class _DeviceDetailsScreenContentState
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              KeyValueRow(title: "Name:",value: widget.device.name,),
-              KeyValueRow(title: "Id:", value: widget.device.id,),
+              KeyValueRow(
+                title: "Name:",
+                value: widget.device.name,
+              ),
+              KeyValueRow(
+                title: "Id:",
+                value: widget.device.id,
+              ),
               Observer(builder: (_) {
                 return KeyValueRow(
                   title: "Connection:",
