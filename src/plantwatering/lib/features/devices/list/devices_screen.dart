@@ -4,7 +4,6 @@ import 'package:plantwatering/core/ble/plant_ble_service.dart';
 import 'package:plantwatering/features/devices/details/device_details_screen.dart';
 import 'package:plantwatering/features/devices/list/stores/device_list_store.dart';
 import 'package:plantwatering/features/devices/list/widgets/devices_tile.dart';
-import 'package:plantwatering/features/devices/models/devices.dart';
 import 'package:plantwatering/features/devices/stores/device_store.dart';
 import 'package:provider/provider.dart';
 
@@ -17,9 +16,7 @@ class DevicesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider(
       create: (_) => DeviceListStore(Provider.of<PlantBleService>(context)),
-      child: Builder(
-          builder: (context) =>
-              DevicesScreenContent(Provider.of<DeviceListStore>(context))),
+      child: Builder(builder: (context) => DevicesScreenContent(Provider.of<DeviceListStore>(context))),
     );
   }
 }
@@ -56,16 +53,13 @@ class _DevicesScreenContentState extends State<DevicesScreenContent> {
             children: <Widget>[
               Expanded(
                   child: RefreshIndicator(
-                onRefresh: ()  =>  widget.store.discoverDevices(),
+                onRefresh: () => widget.store.discoverDevices(),
                 child: Observer(builder: (_) {
                   return ListView.builder(
                     itemCount: _devices().length,
                     itemBuilder: (context, index) {
                       return DeviceTile(
-                        onTap: () => {
-                          Navigator.of(context)
-                              .push(DeviceDetailScreen.route(_deviceAt(index)))
-                        },
+                        onTap: () => {Navigator.of(context).push(DeviceDetailScreen.route(_deviceAt(index)))},
                         device: _deviceAt(index),
                       );
                     },
@@ -83,9 +77,5 @@ class _DevicesScreenContentState extends State<DevicesScreenContent> {
 
   DeviceStore _deviceAt(int index) {
     return _devices().elementAt(index);
-  }
-
-  String getDeviceNameOrUnknown(Device device) {
-    return "${device.name} ${device.isConnected ? "(Connected)" : ""}";
   }
 }
