@@ -1,1 +1,0 @@
-enum SprinklerState { disconnected, connecting, connected, disconnecting }

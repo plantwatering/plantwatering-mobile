@@ -1,16 +1,16 @@
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:plantwatering/core/ble/ble_valve.dart';
-import 'package:plantwatering/core/ble/models/sprinkler_state.dart';
+import 'package:plantwatering/core/ble/models/ble_dripping_device_state.dart';
 import 'package:plantwatering/core/ble/plantwatering_characteristics.dart';
 
-class BleSprinkler {
-  BleSprinkler(this._device);
+class BleDrippingDevice {
+  BleDrippingDevice(this._device);
 
   final BluetoothDevice _device;
   BleValve _valve;
   List<BluetoothService> _bleServices = List();
 
-  Stream<SprinklerState> get state => _device.state.map((st) => _fromState(st));
+  Stream<BleDrippingDeviceState> get state => _device.state.map((st) => _fromState(st));
 
   Future<BleValve> get valve async => _valve ?? await _tryFindValve();
 
@@ -44,16 +44,16 @@ class BleSprinkler {
     return service.characteristics.firstWhere((c) => c.uuid == Guid(PlantWateringCharacteristics.valve));
   }
 
-  SprinklerState _fromState(BluetoothDeviceState bleState) {
+  BleDrippingDeviceState _fromState(BluetoothDeviceState bleState) {
     switch (bleState) {
       case BluetoothDeviceState.connecting:
-        return SprinklerState.connecting;
+        return BleDrippingDeviceState.connecting;
       case BluetoothDeviceState.connected:
-        return SprinklerState.connected;
+        return BleDrippingDeviceState.connected;
       case BluetoothDeviceState.disconnecting:
-        return SprinklerState.disconnecting;
+        return BleDrippingDeviceState.disconnecting;
       default:
-        return SprinklerState.disconnected;
+        return BleDrippingDeviceState.disconnected;
     }
   }
 }

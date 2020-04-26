@@ -1,16 +1,15 @@
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobx/mobx.dart';
-import 'package:plantwatering/core/ble/ble_sprinkler.dart';
+import 'package:plantwatering/core/ble/ble_dripping_device.dart';
 import 'package:plantwatering/core/ble/ble_valve.dart';
-import 'package:plantwatering/core/ble/models/sprinkler_state.dart';
+import 'package:plantwatering/core/ble/models/ble_dripping_device_state.dart';
 import 'package:plantwatering/core/ble/models/valve_state.dart';
-import 'package:plantwatering/features/devices/models/device_state.dart';
 part 'device_store.g.dart';
 
 class DeviceStore = _DeviceStoreBase with _$DeviceStore;
 
 abstract class _DeviceStoreBase with Store {
-  final BleSprinkler _device;
+  final BleDrippingDevice _device;
   BleValve valve;
 
   final Guid valveCharacteristicGuid = Guid("00002A56-0000-1000-8000-00805F9B34FB");
@@ -26,7 +25,7 @@ abstract class _DeviceStoreBase with Store {
   String get name => _device.name;
 
   @observable
-  SprinklerState state = SprinklerState.disconnected;
+  BleDrippingDeviceState state = BleDrippingDeviceState.disconnected;
 
   @observable
   ObservableFuture<List<BluetoothService>> services;
@@ -35,14 +34,14 @@ abstract class _DeviceStoreBase with Store {
   ValveState valveState = ValveState.unknown;
 
   @computed
-  bool get isConnected => state == SprinklerState.connected;
+  bool get isConnected => state == BleDrippingDeviceState.connected;
 
   @computed
   bool get servicesAvailable => services != null && services.status == FutureStatus.fulfilled;
 
   @action
   Future toggleConnection() async {
-    if (state == SprinklerState.connected || state == SprinklerState.connecting)
+    if (state == BleDrippingDeviceState.connected || state == BleDrippingDeviceState.connecting)
       await _device.disconnect();
     else
       await connect();
@@ -51,7 +50,7 @@ abstract class _DeviceStoreBase with Store {
   @action
   Future initialize() async {
     _reset();
-    if (state != SprinklerState.connected) {
+    if (state != BleDrippingDeviceState.connected) {
       await connect();
     }
     await fetchServices();
@@ -88,13 +87,13 @@ abstract class _DeviceStoreBase with Store {
 
   String get stateMessage {
     switch (state) {
-      case SprinklerState.disconnected:
+      case BleDrippingDeviceState.disconnected:
         return "Disconnected";
-      case SprinklerState.connecting:
+      case BleDrippingDeviceState.connecting:
         return "Connecting";
-      case SprinklerState.connected:
+      case BleDrippingDeviceState.connected:
         return "Connected";
-      case SprinklerState.disconnecting:
+      case BleDrippingDeviceState.disconnecting:
         return "Disconnecting";
       default:
         return "";

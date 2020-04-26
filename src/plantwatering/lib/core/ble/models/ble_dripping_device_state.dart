@@ -1,0 +1,1 @@
+enum BleDrippingDeviceState { disconnected, connecting, connected, disconnecting }

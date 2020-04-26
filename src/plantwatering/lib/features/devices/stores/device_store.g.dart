@@ -24,14 +24,14 @@ mixin _$DeviceStore on _DeviceStoreBase, Store {
   final _$stateAtom = Atom(name: '_DeviceStoreBase.state');
 
   @override
-  SprinklerState get state {
+  BleDrippingDeviceState get state {
     _$stateAtom.context.enforceReadPolicy(_$stateAtom);
     _$stateAtom.reportObserved();
     return super.state;
   }
 
   @override
-  set state(SprinklerState value) {
+  set state(BleDrippingDeviceState value) {
     _$stateAtom.context.conditionallyRunInAction(() {
       super.state = value;
       _$stateAtom.reportChanged();
